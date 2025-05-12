@@ -1,394 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fryer Oil Cost Calculator</title>
     <style>
-        /* Global Styles */
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-        
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        border-radius: 10px;
+    }
+
+    @media (min-width: 768px) {
         .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            max-width: 900px;
-            margin: auto;
+            flex-direction: row;
+            justify-content: space-between;
         }
-        /* Form Section */
-        
-        .form-section {
-            flex: 1 1 100%;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .calculator,
+        .results {
+            width: 48%;
         }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input[type="number"],
-        select,
-        input[type="email"],
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        
-        .slider-container {
-            margin-bottom: 15px;
-        }
-        /* Custom Slider Styles */
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            background: #ddd;
-            border-radius: 5px;
-            outline: none;
-            margin-top: 5px;
-            transition: background 0.3s;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 15px;
-            height: 15px;
-            background-color: #00523E;
-            /* Green Thumb */
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 15px;
-            height: 15px;
-            background-color: #00523E;
-            /* Green Thumb */
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        input[type="range"]:focus {
-            background: #00523E;
-            /* Green Bar on Focus */
-        }
-        /* Result Section */
-        
-        .result-section {
-            flex: 1 1 100%;
-            background-color: #00523E;
-            /* New Green Color */
-            color: white;
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            /* Ensures content stays centered */
-        }
-        
-        .result-section h2 {
-            margin-top: 0;
-            font-size: 1.8rem;
-        }
-        
-        .result-section h1 {
-            margin: 10px 0;
-            font-size: 3rem;
-            font-weight: bold;
-        }
-        
-        .result-section p {
-            font-size: 1rem;
-            line-height: 1.4;
-            margin: 20px 0;
-            max-width: 80%;
-        }
-        
-        .button {
-            background-color: #DBDB00;
-            /* Yellow Button */
-            color: black;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            width: 100%;
-            max-width: 300px;
-        }
-        
-        .button:hover {
-            background-color: #c5c500;
-        }
-        /* Popup Styles */
-        
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-        
-        .popup-form {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: #f1f1f1;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            z-index: 1000;
-            width: 80%;
-            max-width: 400px;
-            padding-left: 20px;
-            /* Equal left padding */
-            padding-right: 20px;
-            /* Equal right padding */
-            box-sizing: border-box;
-            /* Ensures padding is included in total width */
-        }
-        
-        .popup-form h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #00523E;
-            /* Green Title */
-        }
-        
-        .popup-form input[type="email"],
-        .popup-form input[type="text"] {
-            margin-bottom: 10px;
-        }
-        
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: transparent;
-            border: none;
-            font-size: 20px;
-            color: #00523E;
-            /* Green Color */
-            cursor: pointer;
-        }
-        /* Responsive Styles */
-        
-        @media (min-width: 768px) {
-            .form-section {
-                flex: 2;
-            }
-            .result-section {
-                flex: 1;
-            }
-            .button {
-                width: auto;
-            }
-        }
-    </style>
+    }
+
+    .calculator,
+    .results {
+        width: 100%;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #222;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #222;
+        font-size: 15px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 9px 11px;
+        margin-bottom: 18px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        color: #333;
+        background-color: #fff;
+        transition: border-color 0.25s ease;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #4CAF50;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 11px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .results {
+        background-color: #004225;
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+    .results h2 {
+        font-size: 20px;
+        margin-bottom: 14px;
+        font-weight: 600;
+    }
+
+    .results p {
+        font-size: 42px;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .cost-saving-message {
+        font-size: 13px;
+        color: #e5f9f0;
+        line-height: 1.6;
+        margin-top: 16px;
+    }
+
+    .message {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+        position: relative;
+    }
+
+    .close {
+        color: #888;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+
 </head>
-
-
 <body>
-
-
-    <h1>Fryer Oil Cost Calculator</h1>
-
-
     <div class="container">
-        <div class="form-section">
-            <label for="numberOfFryers">Number of Fryers</label>
-            <input type="number" id="numberOfFryers" value="1" min="1">
+        <div class="calculator">
+            <h2>Fryer Oil Cost Calculator</h2>
+            <form id="calculator-form">
+                <label for="number-fryers">How many fryers do you have?</label>
+                <input type="number" id="number-fryers" name="number_fryers" required>
+
+                <label for="fryer-size">Which size of the fryer do have?</label>
+                <select id="fryer-size" name="fryer_size" required>
+                    <option value="" disabled selected>Select Fryer Size</option>
+                    <option value="F15">Small(35lbs and under)</option>
+                    <option value="F25">Medium(35-55lbs)</option>
+                    <option value="F40">Large(55lbs and more)</option>
+                </select>
+
+                <label for="pail-cost">What is your cost per pail of oil?</label>
+                <input type="number" id="pail-cost" name="pail_cost" required>
+
+                <label for="pails-per-fryer">How many pails does each fryer take?</label>
+                <input type="number" id="pails-per-fryer" name="pails_per_fryer" required>
+
+         
+                
+
+                <label for="oil-frequency">How often do you change the deep frying oil in a week?</label>
+                <select id="oil-frequency" name="oil_frequency" required>
+                    <option value="everyday">Every day</option>
+                    <option value="every 2 days">Every 2 days</option>
+                    <option value="every 3 days">Every 3 days</option>
+                    <option value="every 4 days">Every 4 days</option>
+                    <option value="every 5 days">Every 5 days</option>
+                    <option value="every 6 days">Every 6 days</option>
+                    <option value="once a week">Once a week</option>
+                    <option value="twice a week">Twice a week</option>
+                </select>
 
 
-            <label for="fryerSize">Fryer Size</label>
-            <select id="fryerSize">
-       <option value="standard">Standard Fryer (less than 50lbs)</option>
-       <option value="large">Large Fryer (more than 50lbs)</option>
-     </select>
 
 
-            <label for="costPerPail">Cost per Pail of Oil (USD)</label>
-            <input type="number" id="costPerPail" value="20" min="1">
-
-
-            <div class="slider-container">
-                <label for="pailsPerFryer">Pails per Fryer</label>
-                <input type="range" id="pailsPerFryer" min="1" max="10" value="2">
-                <span id="pailsValue">2</span>
-            </div>
-
-
-            <div class="slider-container">
-                <label for="oilChangeFrequency">Oil Change Frequency Per Week</label>
-                <input type="range" id="oilChangeFrequency" min="1" max="7" value="3">
-                <span id="frequencyValue">3</span>
-            </div>
+                <input type="hidden" id="savings" name="savings" readonly>
+            </form>
         </div>
 
-
-        <div class="result-section">
-            <h2>Annual Savings</h2>
-            <h1 id="weeklySavings">$0.00</h1>
-            <p>Reduce Your Oil Expenses! Explore cost-saving options to maximize efficiency and lower expenses with our expert tips.</p>
-            <button class="button" onclick="openPopup()">Talk to an Agent</button>
+        <div class="results">
+            <h3>Annual Savings</h3>
+            <p id="annual-savings">$0.00</p>
+            <div class="cost-saving-message">Reduce Your Oil Expenses! Explore cost-saving options to maximize efficiency and lower expenses with our expert tips.</div>
+            <button type="button" id="talk-to-agent">Purchase with Discount!</button>
         </div>
     </div>
 
+    <!-- Pop-up form -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Contact Us</h2>
+            <form id="popupForm" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
 
-    <div class="popup-overlay" onclick="closePopup()"></div>
-    <div class="popup-form">
-        <button class="close-button" onclick="closePopup()">&times;</button>
-        <h2>Join Wishlist</h2>
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Enter your email" required>
-        <label for="mobile">Phone Number</label>
-        <input type="text" id="mobile" placeholder="Enter your phone number" required>
-        <button class="button" onclick="submitForm()">Join Now</button>
+                <label for="business-name">Business Name:</label>
+                <input type="text" id="business-name" name="business_name" required>
+
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="owner">Owner</option>
+                    <option value="manager">Manager</option>
+                    <option value="head_chef">Head Chef</option>
+                </select>
+
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="mobile">Mobile Number:</label>
+                <select id="country-code">
+                    <option value="+1" selected>USA (+1)</option>
+                    <!-- Add other country options here -->
+                </select>
+                <input type="text" id="mobile" name="mobile" required placeholder="e.g., (555) 123-4567">
+
+                <!-- Hidden inputs to capture calculator data -->
+                <input type="hidden" name="number_fryers" id="hidden-number-fryers">
+                <input type="hidden" name="pail_cost" id="hidden-pail-cost">
+                <input type="hidden" name="pails_per_fryer" id="hidden-pails-per-fryer">
+                <input type="hidden" name="oil_frequency" id="hidden-oil-frequency">
+                <input type="hidden" name="fryer_size" id="hidden-fryer-size"> <!-- Hidden input for fryer size -->
+                <input type="hidden" name="savings" id="hidden-savings">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 
+    <div id="message" class="message" style="display: none; font-weight: bold; margin: 10px 0;"></div>
 
-    <script>
-        const numberOfFryers = document.getElementById('numberOfFryers');
-        const costPerPail = document.getElementById('costPerPail');
-        const pailsPerFryer = document.getElementById('pailsPerFryer');
-        const oilChangeFrequency = document.getElementById('oilChangeFrequency');
-        const weeklySavings = document.getElementById('weeklySavings');
-        const pailsValue = document.getElementById('pailsValue');
-        const frequencyValue = document.getElementById('frequencyValue');
-        const googleUrl = 'https://script.google.com/macros/s/AKfycby9mcFoVAgVvyHvBocq8vGOyJw2RuAc9_1523X6Ci3xpM0zZhDrtu2eIUvXEGbl7WqOqQ/exec';
+<script>
+    document.getElementById('number-fryers').addEventListener('input', calculateSavings);
+    document.getElementById('pail-cost').addEventListener('input', calculateSavings);
+    document.getElementById('pails-per-fryer').addEventListener('input', calculateSavings);
+    document.getElementById('oil-frequency').addEventListener('input', calculateSavings);
+    document.getElementById('fryer-size').addEventListener('change', calculateSavings);
 
+    function calculateSavings() {
+          // Get input values and parse them to floats, defaulting to 0 if not a number
+    const numberOfFryers = parseFloat(document.getElementById('number-fryers').value) || 0;
+    const pailCost = parseFloat(document.getElementById('pail-cost').value) || 0;
+    const pailsPerFryer = parseFloat(document.getElementById('pails-per-fryer').value) || 0;
+    const oilFrequency = document.getElementById('oil-frequency').value;
 
-        function calculateSavings() {
-            const numFryers = numberOfFryers.value;
-            const costPerPailValue = costPerPail.value;
-            const pailsPerFryerValue = pailsPerFryer.value;
-            const oilChangeFrequencyValue = oilChangeFrequency.value;
+        // Initialize frequency multiplier variable
+    let frequencyMultiplier = 0;
 
+// Determine the frequency multiplier based on the oil change frequency
+switch (oilFrequency) {
+    case "everyday":
+        frequencyMultiplier = 365;
+        break;
+    case "every 2 days":
+        frequencyMultiplier = 182.5;
+        break;
+    case "every 3 days":
+        frequencyMultiplier = 121.67; // Approx. 2.33 changes a week
+        break;
+    case "every 4 days":
+        frequencyMultiplier = 91.25;
+        break;
+    case "every 5 days":
+        frequencyMultiplier = 73;
+        break;
+    case "every 6 days":
+        frequencyMultiplier = 60.83; // Approx. 1.17 changes a week
+        break;
+    case "once a week":
+        frequencyMultiplier = 52.14;
+        break;
+    case "twice a week":
+        frequencyMultiplier = 104.29;
+        break;
+    default:
+        frequencyMultiplier = 0;
+}
 
-            const costWithoutFrylow = numFryers * pailsPerFryerValue * costPerPailValue * oilChangeFrequencyValue;
-            const costWithFrylow = 0.5 * costWithoutFrylow; // Assuming Frylow reduces cost by 50%
+// Calculate costs
+const costWithoutFrylow = pailCost * numberOfFryers * pailsPerFryer * frequencyMultiplier;
+const costWithFrylow = pailCost * numberOfFryers * pailsPerFryer * 24; // Assuming Frylow reduces oil use
 
-            const savings = (costWithoutFrylow - costWithFrylow) * 52;
+// Calculate savings
+const savings = costWithoutFrylow - costWithFrylow;
 
+        const formattedSavings = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(savings);
+        document.getElementById('annual-savings').innerText = formattedSavings;
+        document.getElementById('savings').value = savings.toFixed(2);
+    }
 
-            weeklySavings.innerText = `$${savings.toFixed(2)}`;
+    document.getElementById('talk-to-agent').onclick = function() {
+        document.getElementById('myModal').style.display = 'block';
+    };
+
+    document.querySelector('.close').onclick = function() {
+        document.getElementById('myModal').style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('myModal')) {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    };
+
+    function validateForm() {
+        const email = document.getElementById('email').value;
+        const mobile = document.getElementById('mobile').value;
+
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if (!emailPattern.test(email)) {
+            alert('Please enter a valid email address.');
+            return false;
         }
 
-
-        numberOfFryers.addEventListener('input', calculateSavings);
-        costPerPail.addEventListener('input', calculateSavings);
-        pailsPerFryer.addEventListener('input', function() {
-            pailsValue.innerText = pailsPerFryer.value;
-            calculateSavings();
-        });
-        oilChangeFrequency.addEventListener('input', function() {
-            frequencyValue.innerText = oilChangeFrequency.value;
-            calculateSavings();
-        });
-
-
-        function openPopup() {
-            document.querySelector('.popup-overlay').style.display = 'block';
-            document.querySelector('.popup-form').style.display = 'block';
+        const mobilePattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (!mobilePattern.test(mobile)) {
+            alert('Please enter a valid mobile number in the format (555) 123-4567.');
+            return false;
         }
 
+        return true;
+    }
 
-        function closePopup() {
-            document.querySelector('.popup-overlay').style.display = 'none';
-            document.querySelector('.popup-form').style.display = 'none';
+    document.getElementById('popupForm').onsubmit = function(event) {
+        event.preventDefault();
+
+        if (!validateForm()) return;
+
+        document.getElementById('hidden-number-fryers').value = document.getElementById('number-fryers').value;
+        document.getElementById('hidden-pail-cost').value = document.getElementById('pail-cost').value;
+        document.getElementById('hidden-pails-per-fryer').value = document.getElementById('pails-per-fryer').value;
+        document.getElementById('hidden-oil-frequency').value = document.getElementById('oil-frequency').value;
+        document.getElementById('hidden-fryer-size').value = document.getElementById('fryer-size').value;
+        document.getElementById('hidden-savings').value = document.getElementById('savings').value;
+
+        const messageDiv = document.getElementById('message');
+        messageDiv.innerText = 'Form submitted successfully! Redirecting...';
+        messageDiv.style.color = 'green';
+        messageDiv.style.display = 'block';
+
+        const fryerSize = document.getElementById('fryer-size').value;
+        let redirectURL = '';
+
+        if (fryerSize === 'F15') {
+            redirectURL = 'https://frylowstore.com/products/fl-15';
+        } else if (fryerSize === 'F25') {
+            redirectURL = 'https://frylowstore.com/products/frylow-fry-oil';
+        } else if (fryerSize === 'F40') {
+            redirectURL = 'https://frylowstore.com/products/fl-40';
         }
 
-
-        const isPostCommented = async function(formData) {
-            const combinedFormData = new FormData();
-            for (const key in formData) {
-                combinedFormData.append(key, formData[key]);
-            }
-            const apiCall = `${googleUrl}`;
-            return await fetch(apiCall, {
-                method: 'POST',
-                body: combinedFormData
-            });
-        }
-
-
-        async function submitForm() {
-            const email = document.getElementById('email').value;
-            const mobile = document.getElementById('mobile').value;
-            const numberOfFryersValue = numberOfFryers.value;
-            const costPerPailValue = costPerPail.value;
-            const pailsPerFryerValue = pailsPerFryer.value;
-            const oilChangeFrequencyValue = oilChangeFrequency.value;
-            const savingsValue = weeklySavings.innerText;
-
-
-            if (email && mobile) {
-                const formData = {
-                    email: email,
-                    mobile: mobile,
-                    numberOfFryers: numberOfFryersValue,
-                    costPerPail: costPerPailValue,
-                    pailsPerFryer: pailsPerFryerValue,
-                    oilChangeFrequency: oilChangeFrequencyValue,
-                    savings: savingsValue
-                };
-
-                // debugger;
-                isPostCommented(formData).then((response) => {
-                    if (response.ok) {
-                        alert(`Thank you for joining the wishlist! \nEmail: ${email} \nPhone: ${mobile}`);
-                        closePopup();
-                    }
-                }, (reject) => {
-                    console.log(reject);
-                    alert("There was an error submitting your data. Please try again.");
-                });
+        setTimeout(() => {
+            if (redirectURL) {
+                window.open(redirectURL, '_blank');
             } else {
-                alert("Please fill out both fields.");
+                alert('Please select a valid fryer size.');
             }
+            document.getElementById('popupForm').submit();
+        }, 2000);
+    };
+
+    document.getElementById('mobile').addEventListener('input', function(e) {
+        let input = e.target.value.replace(/\D/g, '');
+        if (input.length >= 10) {
+            input = input.substring(0, 10);
         }
-
-
-        // Initial calculation
-        calculateSavings();
-    </script>
+        let formatted = input.length > 0 ? `(${input.substring(0, 3)}) ` : '';
+        if (input.length >= 4) {
+            formatted += `${input.substring(3, 6)}-`;
+        }
+        if (input.length >= 7) {
+            formatted += input.substring(6);
+        }
+        e.target.value = formatted;
+    });
+</script>
 
 
 </body>
-
-
 </html>
